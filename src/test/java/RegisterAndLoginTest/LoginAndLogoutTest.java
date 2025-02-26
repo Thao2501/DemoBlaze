@@ -1,5 +1,6 @@
 package RegisterAndLoginTest;
 
+import Page.RegisterAndLoginPage;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,27 +16,20 @@ import java.time.Duration;
 
 public class LoginAndLogoutTest {
     WebDriver driver;
+    WebDriverWait wait;
+    RegisterAndLoginPage registerAndLoginPage;
 
     @BeforeMethod
     void setUp() {
         driver = new ChromeDriver();
         driver.get("https://www.demoblaze.com/");
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        registerAndLoginPage = new RegisterAndLoginPage(driver,wait);
     }
 
     @Test
     void loginAndLogoutSuccess() {
-        driver.findElement(By.id("login2")).click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys("Thao250196");
-
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("123456");
-
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login("Thao250196","123456");
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nameofuser")));
         Assert.assertTrue(driver.findElement(By.id("nameofuser")).getText().contains("Welcome Thao250196"));
@@ -45,45 +39,20 @@ public class LoginAndLogoutTest {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("signin2")));
         Assert.assertTrue(driver.findElement(By.id("signin2")).getText().contains("Sign up"));
-
-
     }
 
     @Test
     void loginWithEmptyUsername() {
-        driver.findElement(By.id("login2")).click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys("");
-
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("123456");
-
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login("","123456");
 
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
         Assert.assertTrue(alert.getText().contains("Please fill out Username and Password."));
-
     }
 
     @Test
     void loginWithEmptyPassword() {
-        driver.findElement(By.id("login2")).click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys("Thao250196");
-
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("");
-
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login("Thao250196","");
 
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
@@ -92,18 +61,7 @@ public class LoginAndLogoutTest {
 
     @Test
     void loginWithWrongUsername() {
-        driver.findElement(By.id("login2")).click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys("wrongusername250196");
-
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("123456");
-
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login("wrongusername250196","123456");
 
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
@@ -112,18 +70,7 @@ public class LoginAndLogoutTest {
 
     @Test
     void loginWithWrongPassword() {
-        driver.findElement(By.id("login2")).click();
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys("Thao250196");
-
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("1234567");
-
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login("Thao250196","1234567");
 
         wait.until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();

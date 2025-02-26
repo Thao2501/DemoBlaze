@@ -15,37 +15,23 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 
 public class RegisterAndLoginTest {
-    WebDriver driver = new ChromeDriver();
+    WebDriver driver;
     RegisterAndLoginPage registerAndLoginPage;
+    WebDriverWait wait;
+
     @BeforeMethod
     void setUp() {
-
+        driver = new ChromeDriver();
         driver.get("https://www.demoblaze.com/");
+        wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        registerAndLoginPage = new RegisterAndLoginPage(driver,wait);
     }
 
     @Test
     void registerSuccess() {
 
-
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        registerAndLoginPage = new RegisterAndLoginPage();
-
-        //Open Sign-up form
-        driver.findElement(By.id("signin2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sign-username")));
-
-        //Input random username
-        driver.findElement(By.id("sign-username")).click();
         String randomUsername = RegisterAndLoginPage.generateRandomString(8);
-        driver.findElement(By.id("sign-username")).sendKeys(randomUsername);
-
-        //Input password
-        driver.findElement(By.id("sign-password")).click();
-        driver.findElement(By.id("sign-password")).sendKeys("123456");
-
-        //Click Sign-up button
-        driver.findElement(By.xpath("//button[@onclick='register()']")).click();
+        registerAndLoginPage.register(randomUsername,"123456");
 
         //Wait for alert
         wait.until(ExpectedConditions.alertIsPresent());
@@ -56,21 +42,7 @@ public class RegisterAndLoginTest {
         //Accept alert
         driver.switchTo().alert().accept();
 
-        //Click Sign-in button
-        driver.findElement(By.id("login2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("loginusername")));
-
-
-        //Input random username
-        driver.findElement(By.id("loginusername")).click();
-        driver.findElement(By.id("loginusername")).sendKeys(randomUsername);
-
-        //Input password
-        driver.findElement(By.id("loginpassword")).click();
-        driver.findElement(By.id("loginpassword")).sendKeys("123456");
-
-        //Click Sign-in button
-        driver.findElement(By.xpath("//button[@onclick='logIn()']")).click();
+        registerAndLoginPage.login(randomUsername,"123456");
 
         //Assert
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nameofuser")));
@@ -79,24 +51,8 @@ public class RegisterAndLoginTest {
 
     @Test
     void registerWithExistUsername() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        registerAndLoginPage = new RegisterAndLoginPage();
-
-        //Open Sign-up form
-        driver.findElement(By.id("signin2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sign-username")));
-
-        //Input random username
-        driver.findElement(By.id("sign-username")).click();
-        driver.findElement(By.id("sign-username")).sendKeys("Thao250196");
-
-        //Input password
-        driver.findElement(By.id("sign-password")).click();
-        driver.findElement(By.id("sign-password")).sendKeys("123456");
-
-        //Click Sign-up button
-        driver.findElement(By.xpath("//button[@onclick='register()']")).click();
+        registerAndLoginPage.register("Thao250196","123456");
 
         //Wait for alert and accept
         wait.until(ExpectedConditions.alertIsPresent());
@@ -105,24 +61,11 @@ public class RegisterAndLoginTest {
         Assert.assertEquals("This user already exist.", alertText);
         driver.switchTo().alert().accept();
 
-
     }
     @Test
     void registerWithEmptyUsername() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        registerAndLoginPage = new RegisterAndLoginPage();
-
-        //Open Sign-up form
-        driver.findElement(By.id("signin2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sign-username")));
-
-        //Input password
-        driver.findElement(By.id("sign-password")).click();
-        driver.findElement(By.id("sign-password")).sendKeys("123456");
-
-        //Click Sign-up button
-        driver.findElement(By.xpath("//button[@onclick='register()']")).click();
+        registerAndLoginPage.register("","123456");
 
         //Wait for alert and accept
         wait.until(ExpectedConditions.alertIsPresent());
@@ -135,20 +78,7 @@ public class RegisterAndLoginTest {
     }
     @Test
     void registerWithEmptyPassword() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        registerAndLoginPage = new RegisterAndLoginPage();
-
-        //Open Sign-up form
-        driver.findElement(By.id("signin2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sign-username")));
-
-        //Input random username
-        driver.findElement(By.id("sign-username")).click();
-        driver.findElement(By.id("sign-username")).sendKeys("Thao250196");
-
-        //Click Sign-up button
-        driver.findElement(By.xpath("//button[@onclick='register()']")).click();
+        registerAndLoginPage.register("Thao250196","");
 
         //Wait for alert and accept
         wait.until(ExpectedConditions.alertIsPresent());
@@ -159,16 +89,8 @@ public class RegisterAndLoginTest {
     }
     @Test
     void registerWithEmptyUserNameAndPassword() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        registerAndLoginPage = new RegisterAndLoginPage();
-
-        //Open Sign-up form
-        driver.findElement(By.id("signin2")).click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sign-username")));
-
-        //Click Sign-up button
-        driver.findElement(By.xpath("//button[@onclick='register()']")).click();
+        registerAndLoginPage.register("","");
 
         //Wait for alert and accept
         wait.until(ExpectedConditions.alertIsPresent());
