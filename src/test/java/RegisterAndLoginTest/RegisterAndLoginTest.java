@@ -1,6 +1,7 @@
 package RegisterAndLoginTest;
 
 import Page.RegisterAndLoginPage;
+import Support.Browser;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -30,8 +31,10 @@ public class RegisterAndLoginTest {
     @Test
     void registerSuccess() {
 
-        String randomUsername = RegisterAndLoginPage.generateRandomString(8);
-        registerAndLoginPage.register(randomUsername,"123456");
+        String randomUsername = "testuser" + System.currentTimeMillis();
+        String randomPassword = Browser.randomPassword();
+
+        registerAndLoginPage.register(randomUsername,randomPassword);
 
         //Wait for alert
         wait.until(ExpectedConditions.alertIsPresent());
@@ -42,7 +45,7 @@ public class RegisterAndLoginTest {
         //Accept alert
         driver.switchTo().alert().accept();
 
-        registerAndLoginPage.login(randomUsername,"123456");
+        registerAndLoginPage.login(randomUsername, randomPassword);
 
         //Assert
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nameofuser")));

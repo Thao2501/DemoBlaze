@@ -23,6 +23,7 @@ public class LoginAndLogoutTest {
     void setUp() {
         driver = new ChromeDriver();
         driver.get("https://www.demoblaze.com/");
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         registerAndLoginPage = new RegisterAndLoginPage(driver,wait);
     }
