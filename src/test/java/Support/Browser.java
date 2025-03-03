@@ -1,15 +1,45 @@
 package Support;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Random;
 
 public class Browser {
     private static WebDriver driver;
+    private static WebDriverWait wait;
 
+    public static void init(WebDriver driverInstance) {
+        driver = driverInstance;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    public static void openBrowser(String browser) {
+        switch (browser) {
+            case "chrome": {
+                driver = new ChromeDriver();
+                break;
+            }
+            case "firefox": {
+                driver = new FirefoxDriver();
+                break;
+            }
+            case "Safari": {
+                driver = new SafariDriver();
+                break;
+            }
+        }
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+    }
 
     public static void scrollDown(WebDriver driver, int x) throws InterruptedException {
         Actions actions = new Actions(driver);
@@ -43,4 +73,14 @@ public class Browser {
         return password.toString();
 
     }
+
+    public static void click(By locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+    }
+
+    public static void fill(By locator, CharSequence... withText) {
+
+        driver.findElement(locator).sendKeys(withText);
+    }
+
 }
