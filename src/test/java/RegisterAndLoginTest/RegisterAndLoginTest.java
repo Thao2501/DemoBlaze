@@ -1,6 +1,7 @@
 package RegisterAndLoginTest;
 
 import Page.RegisterAndLoginPage;
+import Support.Browser;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,24 +26,19 @@ public class RegisterAndLoginTest {
         driver.get("https://www.demoblaze.com/");
         wait = new WebDriverWait(driver,Duration.ofSeconds(10));
         registerAndLoginPage = new RegisterAndLoginPage(driver,wait);
+        Browser.init(driver);
+
     }
 
     @Test
     void registerSuccess() {
 
-        String randomUsername = RegisterAndLoginPage.generateRandomString(8);
-        registerAndLoginPage.register(randomUsername,"123456");
+        String randomUsername = "testuser" + System.currentTimeMillis();
+        String randomPassword = Browser.randomPassword();
 
-        //Wait for alert
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        Assert.assertEquals("Sign up successful.", alertText);
+        registerAndLoginPage.register(randomUsername,randomPassword,"Sign up successful.");
 
-        //Accept alert
-        driver.switchTo().alert().accept();
-
-        registerAndLoginPage.login(randomUsername,"123456");
+        registerAndLoginPage.login(randomUsername, randomPassword);
 
         //Assert
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nameofuser")));
@@ -52,52 +48,25 @@ public class RegisterAndLoginTest {
     @Test
     void registerWithExistUsername() {
 
-        registerAndLoginPage.register("Thao250196","123456");
+        registerAndLoginPage.register("Thao250196","123456","This user already exist.");
 
-        //Wait for alert and accept
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        Assert.assertEquals("This user already exist.", alertText);
-        driver.switchTo().alert().accept();
 
     }
     @Test
     void registerWithEmptyUsername() {
 
-        registerAndLoginPage.register("","123456");
-
-        //Wait for alert and accept
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        Assert.assertEquals("Please fill out Username and Password.", alertText);
-        driver.switchTo().alert().accept();
-
+        registerAndLoginPage.register("","123456","Please fill out Username and Password.");
 
     }
     @Test
     void registerWithEmptyPassword() {
-        registerAndLoginPage.register("Thao250196","");
+        registerAndLoginPage.register("Thao250196","","Please fill out Username and Password.");
 
-        //Wait for alert and accept
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        Assert.assertEquals("Please fill out Username and Password.", alertText);
-        driver.switchTo().alert().accept();
     }
     @Test
     void registerWithEmptyUserNameAndPassword() {
 
-        registerAndLoginPage.register("","");
-
-        //Wait for alert and accept
-        wait.until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        String alertText = alert.getText();
-        Assert.assertEquals("Please fill out Username and Password.", alertText);
-        driver.switchTo().alert().accept();
+        registerAndLoginPage.register("","","Please fill out Username and Password.");
 
     }
     @AfterMethod
